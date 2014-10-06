@@ -55,34 +55,37 @@
 
         var link = svg.selectAll('.link');
         var node = svg.selectAll('.node');
-        function update(data) {
 
-          // DATA JOIN
-          // Join new data with old elements, if any.
-          var links = svg.selectAll(".link")
-              .data(data);
+        function update() {
+            console.log('update');
+            console.log(link);
+            d3.json('data3.json', function(error, graph) {
+                links = graph.links;
+                nodes = graph.nodes;
+                link = svg.selectAll('.link')
+                .data(links)
+                .enter().insert('line', '.node')
+                .attr('class', 'link');
 
-          // UPDATE
-          // Update old elements as needed.
-          text.attr("class", "update");
-
-          // ENTER
-          // Create new elements as needed.
-          text.enter().append("text")
-              .attr("class", "enter")
-              .attr("x", function(d, i) { return i * 32; })
-              .attr("dy", ".35em");
-
-          // ENTER + UPDATE
-          // Appending to the enter selection expands the update selection to include
-          // entering elements; so, operations on the update selection after appending to
-          // the enter selection will apply to both entering and updating nodes.
-          text.text(function(d) { return d; });
-
-          // EXIT
-          // Remove old elements as needed.
-          text.exit().remove();
+                node = svg.selectAll('.node')
+                .data(nodes)
+                .enter().append("g")
+                .attr('class', 'node')
+                .style("fill", function(d, i) { return fill(i); })
+                .call(force.drag);
+            });
+            console.log('new link');
+            console.log(link);
+            force
+            .links(links)
+            .nodes(nodes)
+            .start();
         }
+
+        setInterval(function() {
+            links.pop();
+            update();
+        }, 2000);
 
         d3.json('data2.json', function(error, graph) {
             nodes = graph.nodes;
@@ -93,34 +96,35 @@
             .start();
 
             link = svg.selectAll('.link')
-            .data(graph.links)
+            .data(links)
             .enter().append('line')
             .attr('class', 'link');
 
-            console.log(link);
-
             node = svg.selectAll('.node')
-            .data(graph.nodes)
+            .data(nodes)
             .enter().append("g")
             .attr('class', 'node')
             .style("fill", function(d, i) { return fill(i); })
             .call(force.drag);
 
-            node.append("circle")
-            .attr("r", 8);
+            node.append("image")
+                .attr("xlink:href", "https://github.com/favicon.ico")
+                .attr("x", -8)
+                .attr("y", -8)
+                .attr("width", 16)
+                .attr("height", 16);
 
             node.append("text")
             .attr("x", 10)
             .attr("dy", ".35em")
             .text(function(d) {return d.name;});
 
-
         });
 
 
         force.on("tick", function() {
-            // graph.nodes[6].x = width / 2;
-            // graph.nodes[6].y = height / 2;
+            nodes[6].x = width / 2;
+            nodes[6].y = height / 2;
             link.attr("x1", function(d) { return d.source.x; })
             .attr("y1", function(d) { return d.source.y; })
             .attr("x2", function(d) { return d.target.x; })
