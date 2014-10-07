@@ -6,14 +6,11 @@
     <style>
 
         .node {
-            fill: #ccc;
-            stroke: #ccc;
-            stroke-width: 1px;
         }
 
         .link {
             stroke: #777;
-            stroke-width: 2px;
+            stroke-width: 3px;
         }
 
     </style>
@@ -23,8 +20,10 @@
     <script>
 
 
-        var width = 760,
+        var width = 900,
         height = 800;
+
+        var iconsize = 80;
 
         var fill = d3.scale.category10();
 
@@ -33,8 +32,8 @@
         .attr('height', height);
 
         var force = d3.layout.force()
-        .charge(-1900)
-        .linkDistance(120)
+        .charge(-2200)
+        .linkDistance(220)
         .size([width, height]);
 
         // setTimeout(function() {
@@ -57,10 +56,10 @@
         var node = svg.selectAll('.node');
 
         function update() {
-            console.log('force.links:');
-            console.log(force.links());
-            console.log('force.nodes:');
-            console.log(force.nodes());
+            // console.log('force.links:');
+            // console.log(force.links());
+            // console.log('force.nodes:');
+            // console.log(force.nodes());
 
             // console.log(link);
             d3.json('data3.json', function(error, graph) {
@@ -90,11 +89,11 @@
         setTimeout(function() {
             // links.pop();
             var lnk = force.links();
-            console.log("interval");
-            console.log(lnk);
+            // console.log("interval");
+            // console.log(lnk);
             lnk[5].source = (force.nodes())[2];
             update();
-        }, 5000);
+        }, 10000);
 
         d3.json('data2.json', function(error, graph) {
             nodes = graph.nodes;
@@ -113,30 +112,29 @@
             .data(nodes)
             .enter().append("g")
             .attr('class', 'node')
-            .style("fill", function(d, i) { return fill(i); })
             .call(force.drag);
 
-            console.log("image");
+            // console.log("image");
             node.append("image")
-                .attr("xlink:href", function(d) {
-                    console.log(d.img);
-                    return d.img;})
-                .attr("x", -30)
-                .attr("y", -30)
-                .attr("width", 60)
-                .attr("height", 60);
+                .attr("xlink:href", function(d) {return d.img;})
+                .attr("x", -iconsize / 2)
+                .attr("y", -iconsize / 2)
+                .attr("width", iconsize)
+                .attr("height", iconsize);
 
             node.append("text")
-            .attr("x", 10)
-            .attr("dy", ".35em")
-            .text(function(d) {return d.name;});
+            .attr("x", 50)
+            .attr("dy", 0)
+            .attr("fill", function(d) {return d.color;})
+            .attr("font-family", "sans-serif")
+            .text(function(d) {return d.ip;});
 
         });
 
 
         force.on("tick", function() {
             nodes[6].x = width / 2;
-            nodes[6].y = height / 2;
+            nodes[6].y = height / 3;
             link.attr("x1", function(d) { return d.source.x; })
             .attr("y1", function(d) { return d.source.y; })
             .attr("x2", function(d) { return d.target.x; })

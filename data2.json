@@ -2,37 +2,43 @@
   "nodes": [
     {
       "name": "arista",
-      "ip": "11.1.1.1",
-      "img": "images/arista.png"
+      "ip": "1.1.1.1",
+      "img": "images/arista.png",
+      "color": "red"
     },
     {
       "name": "hp",
-      "ip": "2.2.2.2",
-      "img": "images/hp.png"
+      "ip": "4.4.4.4",
+      "img": "images/hp.png",
+      "color": "red"
     },
     {
       "name": "aruba",
-      "ip": "2.2.2.2",
-      "img": "images/aruba.jpg"
+      "ip": "3.3.3.3",
+      "img": "images/aruba.jpg",
+      "color": "red"
     },
     {
       "name": "a10",
       "ip": "2.2.2.2",
-      "img": "images/a10.png"
+      "img": "images/a10.png",
+      "color": "red"
     },
     {
       "name": "laptop",
       "ip": "2.2.2.2",
-      "img": "images/laptop.png"
+      "img": "images/laptop.png",
+      "color": "green"
     },
     {
       "name": "vm",
       "ip": "2.2.2.2",
-      "img" : "images/vm.png"
+      "img" : "images/server.png",
+      "color": "green"
     },
     {
       "name": "core",
-      "ip": "2.2.2.2",
+      "ip": "",
       "img": "images/cloud.png"
     }
   ],
