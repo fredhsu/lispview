@@ -57,35 +57,44 @@
         var node = svg.selectAll('.node');
 
         function update() {
-            console.log('update');
-            console.log(link);
-            d3.json('data3.json', function(error, graph) {
-                links = graph.links;
-                nodes = graph.nodes;
-                link = svg.selectAll('.link')
-                .data(links)
-                .enter().insert('line', '.node')
-                .attr('class', 'link');
+            console.log('force.links:');
+            console.log(force.links());
+            console.log('force.nodes:');
+            console.log(force.nodes());
 
-                node = svg.selectAll('.node')
-                .data(nodes)
-                .enter().append("g")
-                .attr('class', 'node')
-                .style("fill", function(d, i) { return fill(i); })
-                .call(force.drag);
-            });
-            console.log('new link');
-            console.log(link);
-            force
-            .links(links)
-            .nodes(nodes)
-            .start();
+            // console.log(link);
+            d3.json('data3.json', function(error, graph) {
+                // link = svg.selectAll('.link').data(force.links());
+                //     .attr('class', 'link');
+
+                // link = link.data(force.links(), function(d) { return d.source.id + "-" + d.target.id; });
+                // console.log(link);
+                // link = svg.selectAll('.link')
+                    // link.enter().insert('line', '.node')
+                    // .attr('class', 'link');
+                // link.exit().remove();
+
+                // node = svg.selectAll('.node')
+                //     .data(nodes)
+                //     .enter().append("g")
+                //     .attr('class', 'node')
+                //     .style("fill", function(d, i) { return fill(i); })
+                //     .call(force.drag);
+                });
+            // console.log('new link');
+            // console.log(link);
+
+            force.start();
         }
 
-        setInterval(function() {
-            links.pop();
+        setTimeout(function() {
+            // links.pop();
+            var lnk = force.links();
+            console.log("interval");
+            console.log(lnk);
+            lnk[5].source = (force.nodes())[2];
             update();
-        }, 2000);
+        }, 5000);
 
         d3.json('data2.json', function(error, graph) {
             nodes = graph.nodes;
@@ -107,12 +116,15 @@
             .style("fill", function(d, i) { return fill(i); })
             .call(force.drag);
 
+            console.log("image");
             node.append("image")
-                .attr("xlink:href", "https://github.com/favicon.ico")
-                .attr("x", -8)
-                .attr("y", -8)
-                .attr("width", 16)
-                .attr("height", 16);
+                .attr("xlink:href", function(d) {
+                    console.log(d.img);
+                    return d.img;})
+                .attr("x", -30)
+                .attr("y", -30)
+                .attr("width", 60)
+                .attr("height", 60);
 
             node.append("text")
             .attr("x", 10)

@@ -2,31 +2,38 @@
   "nodes": [
     {
       "name": "arista",
-      "ip": "11.1.1.1"
+      "ip": "11.1.1.1",
+      "img": "images/arista.png"
     },
     {
       "name": "hp",
-      "ip": "2.2.2.2"
+      "ip": "2.2.2.2",
+      "img": "images/hp.png"
     },
     {
       "name": "aruba",
-      "ip": "2.2.2.2"
+      "ip": "2.2.2.2",
+      "img": "images/aruba.jpg"
     },
     {
       "name": "a10",
-      "ip": "2.2.2.2"
+      "ip": "2.2.2.2",
+      "img": "images/a10.png"
     },
     {
       "name": "laptop",
-      "ip": "2.2.2.2"
+      "ip": "2.2.2.2",
+      "img": "images/laptop.png"
     },
     {
       "name": "vm",
-      "ip": "2.2.2.2"
+      "ip": "2.2.2.2",
+      "img" : "images/vm.png"
     },
     {
       "name": "core",
-      "ip": "2.2.2.2"
+      "ip": "2.2.2.2",
+      "img": "images/core.png"
     }
   ],
   "links": [
