@@ -32,7 +32,7 @@
         .attr('height', height);
 
         var force = d3.layout.force()
-        .charge(-2200)
+        .charge(-3200)
         .linkDistance(120)
         .size([width, height]);
 
@@ -145,8 +145,8 @@
                 .attr("height", function(d) {return d.size;});
 
             node.append("text")
-            .attr("x", 50)
-            .attr("dy", 0)
+            .attr("x", -30)
+            .attr("dy", 50)
             .attr("fill", function(d) {return d.color;})
             .attr("font-family", "sans-serif")
             .text(function(d) {return d.ip;});
