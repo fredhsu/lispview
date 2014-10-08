@@ -33,7 +33,7 @@
 
         var force = d3.layout.force()
         .charge(-2200)
-        .linkDistance(220)
+        .linkDistance(120)
         .size([width, height]);
 
         // setTimeout(function() {
@@ -55,14 +55,32 @@
         var link = svg.selectAll('.link');
         var node = svg.selectAll('.node');
 
-        function update() {
+        function update(file) {
             // console.log('force.links:');
             // console.log(force.links());
             // console.log('force.nodes:');
             // console.log(force.nodes());
-
             // console.log(link);
-            d3.json('data3.json', function(error, graph) {
+            d3.json(file, function(error, graph) {
+                var lnk = force.links();
+                var glnk = graph.link;
+                console.log(graph.link);
+
+                if ((graph.link[0]).target == lnk[0].target) {
+                    console.log("laptop stays");
+                } else {
+                    console.log("move laptop");
+                    lnk[0].target = (force.nodes())[graph.link[0].target];
+                }
+
+                if ((graph.link[1]).target == lnk[1].target) {
+                    console.log("vm stays");
+                } else {
+                    console.log("move vm");
+                    console.log("move to: " + graph.link[1].target);
+                    lnk[1].target = (force.nodes())[graph.link[1].target];
+                }
+
                 // link = svg.selectAll('.link').data(force.links());
                 //     .attr('class', 'link');
 
@@ -87,13 +105,14 @@
         }
 
         setTimeout(function() {
-            // links.pop();
-            var lnk = force.links();
-            // console.log("interval");
-            // console.log(lnk);
-            lnk[5].source = (force.nodes())[2];
-            update();
-        }, 10000);
+            update('data4.json');
+        }, 5000);
+        setTimeout(function() {
+            update('data5.json');
+        }, 8000);
+        setTimeout(function() {
+            update('data6.json');
+        }, 11000);
 
         d3.json('data2.json', function(error, graph) {
             nodes = graph.nodes;
@@ -108,6 +127,9 @@
             .enter().append('line')
             .attr('class', 'link');
 
+            // (force.links())[0].attr("stroke", "blue");
+            // link[1].attr("stroke", "blue");
+
             node = svg.selectAll('.node')
             .data(nodes)
             .enter().append("g")
@@ -117,10 +139,10 @@
             // console.log("image");
             node.append("image")
                 .attr("xlink:href", function(d) {return d.img;})
-                .attr("x", -iconsize / 2)
-                .attr("y", -iconsize / 2)
-                .attr("width", iconsize)
-                .attr("height", iconsize);
+                .attr("x", function(d) {return -d.size / 2;})
+                .attr("y", function(d) {return -d.size / 2;})
+                .attr("width", function(d) {return d.size;})
+                .attr("height", function(d) {return d.size;});
 
             node.append("text")
             .attr("x", 50)
@@ -133,12 +155,21 @@
 
 
         force.on("tick", function() {
+            nodes[0].x = width / 4;
+            nodes[0].y = height / 4;
+            nodes[1].x = width / 4 * 3;
+            nodes[1].y = height / 4;
+            nodes[2].x = width / 4;
+            nodes[2].y = height / 4 * 3;
+            nodes[3].x = width / 4 * 3;
+            nodes[3].y = height / 4 * 3;
+
             nodes[6].x = width / 2;
-            nodes[6].y = height / 3;
+            nodes[6].y = height / 2;
             link.attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; });
+                .attr("y1", function(d) { return d.source.y; })
+                .attr("x2", function(d) { return d.target.x; })
+                .attr("y2", function(d) { return d.target.y; });
 
             node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")";});
         });
