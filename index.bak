@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Force Layout Example 2</title>
+    <style>
+
+        .node {
+            fill: #ccc;
+            stroke: #ccc;
+            stroke-width: 1px;
+        }
+
+        .link {
+            stroke: #777;
+            stroke-width: 2px;
+        }
+
+    </style>
+</head>
+<body>
+    <script src='http://d3js.org/d3.v3.min.js'></script>
+    <script>
+
+
+        var width = 760,
+        height = 800;
+
+        var fill = d3.scale.category10();
+
+        var svg = d3.select('body').append('svg')
+        .attr('width', width)
+        .attr('height', height);
+
+        var force = d3.layout.force()
+        .charge(-1900)
+        .linkDistance(120)
+        .size([width, height]);
+
+        // setTimeout(function() {
+        //     nodes.splice(4, 4); // remove b
+        //     links.shift(); // remove a-b
+        //     links.pop(); // remove b-c
+        //     start();
+        // }, 3000);
+
+        // setTimeout(function() {
+        //     var a = nodes[1], b = {id: "laptop"}, c = nodes[4];
+        //     nodes.push(b);
+        //     links.push({source: a, target: b}, {source: b, target: c});
+        //     start();
+        // }, 6000);
+        function update(data) {
+
+          // DATA JOIN
+          // Join new data with old elements, if any.
+          var links = svg.selectAll(".link")
+              .data(data);
+
+          // UPDATE
+          // Update old elements as needed.
+          text.attr("class", "update");
+
+          // ENTER
+          // Create new elements as needed.
+          text.enter().append("text")
+              .attr("class", "enter")
+              .attr("x", function(d, i) { return i * 32; })
+              .attr("dy", ".35em");
+
+          // ENTER + UPDATE
+          // Appending to the enter selection expands the update selection to include
+          // entering elements; so, operations on the update selection after appending to
+          // the enter selection will apply to both entering and updating nodes.
+          text.text(function(d) { return d; });
+
+          // EXIT
+          // Remove old elements as needed.
+          text.exit().remove();
+        }
+
+        d3.json('data2.json', function(error, graph) {
+            force
+            .nodes(graph.nodes)
+            .links(graph.links)
+            .start();
+
+
+            var link = svg.selectAll('.link')
+            .data(graph.links)
+            .enter().append('line')
+            .attr('class', 'link');
+
+
+            var node = svg.selectAll('.node')
+            .data(graph.nodes)
+            .enter().append("g")
+            .attr('class', 'node')
+            .style("fill", function(d, i) { return fill(i); })
+            .call(force.drag);
+
+            node.append("circle")
+            .attr("r", 8);
+
+            node.append("text")
+            .attr("x", 10)
+            .attr("dy", ".35em")
+            .text(function(d) {return d.ip;});
+
+
+            force.on("tick", function() {
+                graph.nodes[6].x = width / 2;
+                graph.nodes[6].y = height / 2;
+                link.attr("x1", function(d) { return d.source.x; })
+                .attr("y1", function(d) { return d.source.y; })
+                .attr("x2", function(d) { return d.target.x; })
+                .attr("y2", function(d) { return d.target.y; });
+
+                node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")";});
+            });
+
+        });
+
+</script>
+</body>
+</html>
+

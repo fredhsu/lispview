@@ -6,14 +6,11 @@
     <style>
 
         .node {
-            fill: #ccc;
-            stroke: #ccc;
-            stroke-width: 1px;
         }
 
         .link {
             stroke: #777;
-            stroke-width: 2px;
+            stroke-width: 3px;
         }
 
     </style>
@@ -23,8 +20,10 @@
     <script>
 
 
-        var width = 760,
+        var width = 900,
         height = 800;
+
+        var iconsize = 80;
 
         var fill = d3.scale.category10();
 
@@ -33,7 +32,7 @@
         .attr('height', height);
 
         var force = d3.layout.force()
-        .charge(-1900)
+        .charge(-2200)
         .linkDistance(120)
         .size([width, height]);
 
@@ -50,75 +49,129 @@
         //     links.push({source: a, target: b}, {source: b, target: c});
         //     start();
         // }, 6000);
-        function update(data) {
+        var nodes = [];
+            links = [];
 
-          // DATA JOIN
-          // Join new data with old elements, if any.
-          var links = svg.selectAll(".link")
-              .data(data);
+        var link = svg.selectAll('.link');
+        var node = svg.selectAll('.node');
 
-          // UPDATE
-          // Update old elements as needed.
-          text.attr("class", "update");
+        function update(file) {
+            // console.log('force.links:');
+            // console.log(force.links());
+            // console.log('force.nodes:');
+            // console.log(force.nodes());
+            // console.log(link);
+            d3.json(file, function(error, graph) {
+                var lnk = force.links();
+                var glnk = graph.link;
+                console.log(graph.link);
 
-          // ENTER
-          // Create new elements as needed.
-          text.enter().append("text")
-              .attr("class", "enter")
-              .attr("x", function(d, i) { return i * 32; })
-              .attr("dy", ".35em");
+                if ((graph.link[0]).target == lnk[0].target) {
+                    console.log("laptop stays");
+                } else {
+                    console.log("move laptop");
+                    lnk[0].target = (force.nodes())[graph.link[0].target];
+                }
 
-          // ENTER + UPDATE
-          // Appending to the enter selection expands the update selection to include
-          // entering elements; so, operations on the update selection after appending to
-          // the enter selection will apply to both entering and updating nodes.
-          text.text(function(d) { return d; });
+                if ((graph.link[1]).target == lnk[1].target) {
+                    console.log("vm stays");
+                } else {
+                    console.log("move vm");
+                    console.log("move to: " + graph.link[1].target);
+                    lnk[1].target = (force.nodes())[graph.link[1].target];
+                }
 
-          // EXIT
-          // Remove old elements as needed.
-          text.exit().remove();
+                // link = svg.selectAll('.link').data(force.links());
+                //     .attr('class', 'link');
+
+                // link = link.data(force.links(), function(d) { return d.source.id + "-" + d.target.id; });
+                // console.log(link);
+                // link = svg.selectAll('.link')
+                    // link.enter().insert('line', '.node')
+                    // .attr('class', 'link');
+                // link.exit().remove();
+
+                // node = svg.selectAll('.node')
+                //     .data(nodes)
+                //     .enter().append("g")
+                //     .attr('class', 'node')
+                //     .style("fill", function(d, i) { return fill(i); })
+                //     .call(force.drag);
+                });
+            // console.log('new link');
+            // console.log(link);
+
+            force.start();
         }
 
+        setTimeout(function() {
+            update('data4.json');
+        }, 5000);
+        setTimeout(function() {
+            update('data5.json');
+        }, 8000);
+        setTimeout(function() {
+            update('data6.json');
+        }, 11000);
+
         d3.json('data2.json', function(error, graph) {
+            nodes = graph.nodes;
+            links = graph.links;
             force
-            .nodes(graph.nodes)
-            .links(graph.links)
+            .nodes(nodes)
+            .links(links)
             .start();
 
-
-            var link = svg.selectAll('.link')
-            .data(graph.links)
+            link = svg.selectAll('.link')
+            .data(links)
             .enter().append('line')
             .attr('class', 'link');
 
+            // (force.links())[0].attr("stroke", "blue");
+            // link[1].attr("stroke", "blue");
 
-            var node = svg.selectAll('.node')
-            .data(graph.nodes)
+            node = svg.selectAll('.node')
+            .data(nodes)
             .enter().append("g")
             .attr('class', 'node')
-            .style("fill", function(d, i) { return fill(i); })
             .call(force.drag);
 
-            node.append("circle")
-            .attr("r", 8);
+            // console.log("image");
+            node.append("image")
+                .attr("xlink:href", function(d) {return d.img;})
+                .attr("x", function(d) {return -d.size / 2;})
+                .attr("y", function(d) {return -d.size / 2;})
+                .attr("width", function(d) {return d.size;})
+                .attr("height", function(d) {return d.size;});
 
             node.append("text")
-            .attr("x", 10)
-            .attr("dy", ".35em")
+            .attr("x", 50)
+            .attr("dy", 0)
+            .attr("fill", function(d) {return d.color;})
+            .attr("font-family", "sans-serif")
             .text(function(d) {return d.ip;});
 
+        });
 
-            force.on("tick", function() {
-                graph.nodes[6].x = width / 2;
-                graph.nodes[6].y = height / 2;
-                link.attr("x1", function(d) { return d.source.x; })
+
+        force.on("tick", function() {
+            nodes[0].x = width / 4;
+            nodes[0].y = height / 4;
+            nodes[1].x = width / 4 * 3;
+            nodes[1].y = height / 4;
+            nodes[2].x = width / 4;
+            nodes[2].y = height / 4 * 3;
+            nodes[3].x = width / 4 * 3;
+            nodes[3].y = height / 4 * 3;
+
+            nodes[6].x = width / 2;
+            nodes[6].y = height / 2;
+            link.attr("x1", function(d) { return d.source.x; })
                 .attr("y1", function(d) { return d.source.y; })
                 .attr("x2", function(d) { return d.target.x; })
                 .attr("y2", function(d) { return d.target.y; });
 
-                node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")";});
-            });
-
+            node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")";});
         });
 
 </script>
