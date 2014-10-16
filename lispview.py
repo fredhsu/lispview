@@ -59,4 +59,4 @@ def fetch():
     return flask.jsonify({'link': link})
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')
