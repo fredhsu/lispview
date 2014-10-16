@@ -10,12 +10,16 @@ import json
 import time
 
 eidMap = {'10.1.1.0/24': 'eid-arista',
-          '10.1.11.0/24': 'eid-arista',
-          '13.1.1.0/24': 'eid-hp'}
+          '10.1.11.0/24': 'eid-arista2',
+          '13.1.1.0/24': 'eid-hp',
+          '11.1.1.0/24': 'eid-a10',
+          '77.7.7.7/32': 'laptop',
+          '66.6.6.6/32': 'vm'}
 
 rlocMap = {'1.1.1.1': 'arista',
            '1.1.11.1': 'arista',
-           '4.4.4.4': 'hp'}
+           '4.4.4.4': 'hp',
+           '2.2.2.2': 'a10'}
 
 while True:
     lisp = lispapi.api_init("172.28.171.230", "root", "", 8080, api_debug=True)
