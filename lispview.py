@@ -21,10 +21,7 @@ def hello():
 
 @app.route("/lispview/")
 def lispview():
-    print "lispviwe"
     data = fetch()
-    print "fetched"
-    print data
     return data
 
 
@@ -47,18 +44,12 @@ def fetch():
     # print lisp.api_print()
     link = []
     eids = []
-    print "### going to loop"
-    print json.dumps(siteCache, indent=2)
     for site in siteCache:
-        print site
         if site['registered'] == 'yes' and site['registered-rlocs']:
             eid = eidMap[site['eid-prefix']]
             rloc = rlocMap[site['registered-rlocs'][0]['address']]
             if not eid.startswith("eid"):
                 link.append({'source': eid, 'target': rloc})
-            print "registered site"
-    print "### exit loop"
-    # print link
     return flask.jsonify({'link': link})
 
 if __name__ == "__main__":

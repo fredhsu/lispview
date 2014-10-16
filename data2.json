@@ -47,7 +47,15 @@
       "ip": "",
       "img": "images/cloud-large.jpg",
       "size": 120
+    },
+    {
+      "name": "lispers",
+      "ip": "9.9.9.9",
+      "color": "red",
+      "img": "images/lispers.png",
+      "size": 80
     }
+
   ],
   "links": [
     {
@@ -69,6 +77,10 @@
     },
     {
       "source": 3,
+      "target": 6
+    },
+    {
+      "source": 7,
       "target": 6
     },
     {
