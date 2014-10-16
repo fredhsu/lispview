@@ -45,12 +45,26 @@
 
         var link = svg.selectAll('.link');
         var node = svg.selectAll('.node');
+        function contains(a, obj) {
+            var i = a.length;
+            while (i--) {
+              if(a[i].source == obj) {
+                  return true;
+              }
+            }
+            return false;
+        }
 
         function update(file) {
             d3.json(file, function(error, graph) {
                 var lnk = force.links();
                 var glnk = graph.link;
-                console.log(graph.link);
+                if (!contains(graph.link, 4)) {
+                    console.log("!!!no 4");
+                    console.log(link);
+                    laptoplink = d3.select("[sn=laptop]");
+                    //laptoplink.style("opacity", 0);
+                }
                 graph.link.forEach(function(curlink) { 
                     if (curlink.source == 4) {
                         console.log("laptop entry")
@@ -67,7 +81,6 @@
                     console.log("vm stays");
                 } else {
                     console.log("move vm");
-                    console.log("move to: " + graph.link[1].target);
                     lnk[1].target = (force.nodes())[curlink.target];
                 }}});
 
@@ -93,6 +106,7 @@
             link = svg.selectAll('.link')
             .data(links)
             .enter().append('line')
+            .attr('sn', function(d) {return d.source.name;})
             .attr('class', 'link');
 
 
