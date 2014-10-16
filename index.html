@@ -94,14 +94,14 @@
             force.start();
         }
 
-        setTimeout(function() {
-            update('data4.json');
+        setInterval(function() {
+            update('http://fredora:5000/lispview/');
         }, 5000);
         setTimeout(function() {
             update('data5.json');
         }, 8000);
         setTimeout(function() {
-            update('data6.json');
+            update('http://fredora:5000/lispview/');
         }, 11000);
 
         d3.json('data2.json', function(error, graph) {
