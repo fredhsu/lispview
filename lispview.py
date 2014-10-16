@@ -52,7 +52,8 @@ def fetch():
         if site['registered'] == 'yes' and site['registered-rlocs']:
             eid = eidMap[site['eid-prefix']]
             rloc = rlocMap[site['registered-rlocs'][0]['address']]
-            link.append({'source': eid, 'target': rloc})
+            if not eid.startswith("eid"):
+                link.append({'source': eid, 'target': rloc})
             print "registered site"
     print "### exit loop"
     # print link
