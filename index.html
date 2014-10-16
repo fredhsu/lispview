@@ -67,38 +67,26 @@
                 var lnk = force.links();
                 var glnk = graph.link;
                 console.log(graph.link);
-
-                if ((graph.link[0]).target == lnk[0].target) {
-                    console.log("laptop stays");
-                } else {
-                    console.log("move laptop");
-                    lnk[0].target = (force.nodes())[graph.link[0].target];
-                }
-
-                if ((graph.link[1]).target == lnk[1].target) {
+                graph.link.forEach(function(curlink) { 
+                    if (curlink.source == 4) {
+                        console.log("laptop entry")
+                        if (curlink.target == lnk[0].target) {
+                            console.log("laptop stays");
+                        } else {
+                            console.log("move laptop");
+                            lnk[0].target = (force.nodes())[curlink.target];
+                        }
+                     }
+                    if (curlink.source == 5) {
+                        console.log("vm entry")
+                if (curlink.target == lnk[1].target) {
                     console.log("vm stays");
                 } else {
                     console.log("move vm");
                     console.log("move to: " + graph.link[1].target);
-                    lnk[1].target = (force.nodes())[graph.link[1].target];
-                }
+                    lnk[1].target = (force.nodes())[curlink.target];
+                }}});
 
-                // link = svg.selectAll('.link').data(force.links());
-                //     .attr('class', 'link');
-
-                // link = link.data(force.links(), function(d) { return d.source.id + "-" + d.target.id; });
-                // console.log(link);
-                // link = svg.selectAll('.link')
-                    // link.enter().insert('line', '.node')
-                    // .attr('class', 'link');
-                // link.exit().remove();
-
-                // node = svg.selectAll('.node')
-                //     .data(nodes)
-                //     .enter().append("g")
-                //     .attr('class', 'node')
-                //     .style("fill", function(d, i) { return fill(i); })
-                //     .call(force.drag);
                 });
             // console.log('new link');
             // console.log(link);
